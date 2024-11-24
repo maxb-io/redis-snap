@@ -40,7 +40,7 @@ jobs:
       run: snapcraft --target-arch arm64 --destructive-mode --enable-experimental-target-arch
     - name: Upload
       run: |
-          echo "placeholder for snapcraft upload"
+          echo "placeholder for snap package upload"
           # for f in *.snap; do snapcraft upload --release=edge $f; done
       env:
         SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAP_TOKEN}}
