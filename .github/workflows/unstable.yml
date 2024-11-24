@@ -32,12 +32,29 @@ jobs:
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: snapcraft --target-arch amd64 --destructive-mode --enable-experimental-target-arch
+      run: snapcraft --verbose --target-arch amd64 --destructive-mode --enable-experimental-target-arch
+      continue-on-error: true
     - name: Build arm64
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: snapcraft --target-arch arm64 --destructive-mode --enable-experimental-target-arch
+      run: snapcraft --verbose --target-arch arm64 --destructive-mode --enable-experimental-target-arch
+      
+    -   name: Archive Snapcraft logs on failure
+        if: failure() # This step runs only if a previous step fails
+        run: |
+            LOG_DIR="${HOME}/.local/share/snapcraft"
+            echo "Searching for logs in $LOG_DIR..."
+            ls -R $LOG_DIR || echo "No logs found."
+        continue-on-error: true # Ensure this step does not block execution
+
+    -   name: Upload Snapcraft logs as artifact
+        if: failure() # Runs only on failure
+        uses: actions/upload-artifact@v3
+        with:
+            name: snapcraft-logs
+            path: ~/.local/share/snapcraft/
+            
     - name: Upload
       run: |
           echo "placeholder for snap package upload"
