@@ -68,10 +68,11 @@ parts:
     plugin: make
     #source: https://github.com/redis/redis.git
     source: redis
-    source-branch: 8.0-m01
+#    source-branch: 8.0-m01
     build-environment:
       - BUILD_WITH_MODULES: "yes"
     override-build: |
+      git checkout 8.0-m01
       echo "BUILD_WITH_MODULES = $BUILD_WITH_MODULES"
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
       source $HOME/.cargo/env
