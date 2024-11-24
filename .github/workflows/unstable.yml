@@ -41,6 +41,7 @@ jobs:
       run: sudo snapcraft --verbose --target-arch arm64 --destructive-mode --enable-experimental-target-arch
       
     -   name: Archive Snapcraft logs on failure
+        # Can be removed when pushing to the real repository
         if: failure() # This step runs only if a previous step fails
         run: |
             LOG_DIR="${HOME}/.local/state/snapcraft"
@@ -49,6 +50,7 @@ jobs:
         continue-on-error: true # Ensure this step does not block execution
 
     -   name: Upload Snapcraft logs as artifact
+        # Can be removed when pushing to the real repository
         if: failure() # Runs only on failure
         uses: actions/upload-artifact@v3
         with:
@@ -62,6 +64,7 @@ jobs:
       env:
         SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAP_TOKEN}}
     - name: upload to artifacts
+      # Can be removed when pushing to the real repository
       uses: actions/upload-artifact@v4
       with:
 #        name: redis-snap
