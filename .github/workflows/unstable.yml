@@ -32,7 +32,7 @@ jobs:
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: snapcraft --verbose --target-arch amd64 --destructive-mode --enable-experimental-target-arch
+      run: sudo snapcraft --verbose --target-arch amd64 --destructive-mode --enable-experimental-target-arch
       continue-on-error: true
     - name: Build arm64
       env:
