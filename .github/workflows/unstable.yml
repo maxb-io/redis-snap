@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
             name: snapcraft-logs
-            path: ~/.local/stte/snapcraft/
+            path: ~/.local/state/snapcraft/
             
     - name: Upload
       run: |
