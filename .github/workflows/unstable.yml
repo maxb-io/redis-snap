@@ -43,7 +43,7 @@ jobs:
     -   name: Archive Snapcraft logs on failure
         if: failure() # This step runs only if a previous step fails
         run: |
-            LOG_DIR="${HOME}/.local/share/snapcraft"
+            LOG_DIR="${HOME}/.local/state/snapcraft"
             echo "Searching for logs in $LOG_DIR..."
             ls -R $LOG_DIR || echo "No logs found."
         continue-on-error: true # Ensure this step does not block execution
@@ -53,7 +53,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
             name: snapcraft-logs
-            path: ~/.local/share/snapcraft/
+            path: ~/.local/stte/snapcraft/
             
     - name: Upload
       run: |
