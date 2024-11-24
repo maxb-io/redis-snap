@@ -38,7 +38,7 @@ jobs:
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: snapcraft --verbose --target-arch arm64 --destructive-mode --enable-experimental-target-arch
+      run: sudo snapcraft --verbose --target-arch arm64 --destructive-mode --enable-experimental-target-arch
       
     -   name: Archive Snapcraft logs on failure
         if: failure() # This step runs only if a previous step fails
