@@ -1,14 +1,16 @@
 name: Unstable
 
 on:
+    push:
+    pull_request:
     workflow_dispatch:
-    schedule:
-      - cron: '0 0 * * *'
+    #schedule:
+    #  - cron: '0 0 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-20.04
-    if: github.repository == 'redis/redis-snap'
+    #if: github.repository == 'redis/redis-snap'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/checkout@v3
@@ -38,6 +40,7 @@ jobs:
       run: snapcraft --target-arch arm64 --destructive-mode --enable-experimental-target-arch
     - name: Upload
       run: |
-          for f in *.snap; do snapcraft upload --release=edge $f; done
+          echo "placeholder for snap package upload"
+          # for f in *.snap; do snapcraft upload --release=edge $f; done
       env:
         SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAP_TOKEN}}
