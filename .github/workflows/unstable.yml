@@ -41,7 +41,7 @@ jobs:
     - name: Upload
       run: |
           echo "placeholder for snapcraft upload"
-       #   for f in *.snap; do snapcraft upload --release=edge $f; done
+          # for f in *.snap; do snapcraft upload --release=edge $f; done
       env:
         SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAP_TOKEN}}
     - name: upload to artifacts
