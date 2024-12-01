@@ -13,8 +13,7 @@ jobs:
     #if: github.repository == 'redis/redis-snap'
     strategy: 
         matrix:
-            include:
-            - target-arch: [amd64, arm64]
+            target-arch: [amd64, arm64]
     steps:
     - uses: actions/checkout@v4
       with:
