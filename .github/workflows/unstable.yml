@@ -35,6 +35,7 @@ jobs:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
       run: |
+          echo "the architecture is ${{ matrix.target-arch }}"
           sudo snapcraft --verbose --target-arch ${{ matrix.target-arch }} --destructive-mode --enable-experimental-target-arch
 #      continue-on-error: true #Consider removing this line after finishing testing
           
