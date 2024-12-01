@@ -11,9 +11,12 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     #if: github.repository == 'redis/redis-snap'
+    strategy: 
+        matrix:
+            include:
+            - target-arch: [amd64, arm64]
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         repository: redis/redis
         path: redis
@@ -28,18 +31,14 @@ jobs:
     - name: Setup Snapcraft
       run: |
         sudo snap install snapcraft --classic
-    - name: Build amd64
+    - name: Build Snap
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: sudo snapcraft --verbose --target-arch amd64 --destructive-mode --enable-experimental-target-arch
-      continue-on-error: true
-    - name: Build arm64
-      env:
-        SNAPCRAFT_BUILD_ENVIRONMENT: host
-        SNAPCRAFT_BUILD_INFO: 1
-      run: sudo snapcraft --verbose --target-arch arm64 --destructive-mode --enable-experimental-target-arch
-      
+      run: |
+          sudo snapcraft --verbose --target-arch ${{ matrix.target-arch }} --destructive-mode --enable-experimental-target-arch
+      continue-on-error: true #Consider removing this line after testing
+          
     -   name: Archive Snapcraft logs on failure
         # Can be removed when pushing to the real repository
         if: failure() # This step runs only if a previous step fails
@@ -52,7 +51,7 @@ jobs:
     -   name: Upload Snapcraft logs as artifact
         # Can be removed when pushing to the real repository
         if: failure() # Runs only on failure
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
             name: snapcraft-logs
             path: ~/.local/state/snapcraft/
