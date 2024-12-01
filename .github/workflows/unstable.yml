@@ -36,7 +36,7 @@ jobs:
         SNAPCRAFT_BUILD_INFO: 1
       run: |
           sudo snapcraft --verbose --target-arch ${{ matrix.target-arch }} --destructive-mode --enable-experimental-target-arch
-      continue-on-error: true #Consider removing this line after finishing testing
+#      continue-on-error: true #Consider removing this line after finishing testing
           
     -   name: Archive Snapcraft logs on failure
         # Can be removed when pushing to the real repository
