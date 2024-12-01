@@ -4,16 +4,13 @@ on:
     push:
     pull_request:
     workflow_dispatch:
-    #schedule:
-    #  - cron: '0 0 * * *'
+    schedule:
+      - cron: '0 0 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-22.04
     #if: github.repository == 'redis/redis-snap'
-    strategy: 
-        matrix:
-            target-arch: [amd64, arm64]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -30,15 +27,18 @@ jobs:
     - name: Setup Snapcraft
       run: |
         sudo snap install snapcraft --classic
-    - name: Build Snap
+    - name: Build amd64
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: |
-          echo "the architecture is ${{ matrix.target-arch }}"
-          sudo snapcraft --verbose --target-arch ${{ matrix.target-arch }}-linux-gnu --destructive-mode --enable-experimental-target-arch
-#      continue-on-error: true #Consider removing this line after finishing testing
-          
+      run: sudo snapcraft --verbose --target-arch amd64 --destructive-mode --enable-experimental-target-arch
+      continue-on-error: true #Consider removing this line after testing
+    - name: Build arm64
+      env:
+        SNAPCRAFT_BUILD_ENVIRONMENT: host
+        SNAPCRAFT_BUILD_INFO: 1
+      run: sudo snapcraft --verbose --target-arch arm64 --destructive-mode --enable-experimental-target-arch
+      
     -   name: Archive Snapcraft logs on failure
         # Can be removed when pushing to the real repository
         if: failure() # This step runs only if a previous step fails
