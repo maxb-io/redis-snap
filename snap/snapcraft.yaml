@@ -105,7 +105,7 @@ parts:
       rm -rf ${RUST_INSTALLER}
       find / -name rustc
 
-#      source $HOME/.cargo/env
+      echo "source $HOME/.cargo/env"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr
       export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
       export PYTHON=python3
