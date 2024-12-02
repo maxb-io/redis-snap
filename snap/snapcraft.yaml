@@ -75,7 +75,7 @@ parts:
 
       # Rust installation script
       RUST_VERSION=1.80.1; \
-      ARCH="$$(uname -m)"; \
+      ARCH="$(uname -m)"; \
       if ldd --version 2>&1 | grep -q musl; then LIBC_TYPE="musl"; else LIBC_TYPE="gnu"; fi; \
       echo "Detected architecture: $${ARCH} and libc: $${LIBC_TYPE}"; \
       case "$${ARCH}" in \
