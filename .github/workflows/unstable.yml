@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: snapcraft-logs
-            path: ~/.local/state/snapcraft/
+            path: ~/.local/state/snapcraft/log 
             
     - name: Upload
       run: |
