@@ -104,7 +104,6 @@ parts:
       tar -xf ${RUST_INSTALLER}.tar.xz; \
       (cd ${RUST_INSTALLER} && ./install.sh); \
       rm -rf ${RUST_INSTALLER}
-      find / -name rustc
 
       echo "source $HOME/.cargo/env"
       mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr

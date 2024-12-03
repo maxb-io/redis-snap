@@ -68,6 +68,6 @@ jobs:
       # Can be removed when pushing to the real repository
       uses: actions/upload-artifact@v4
       with:
-        name: redis-snap-${{ matrix.target-arch }}"
+        name: redis-snap-${{ matrix.target-arch }}
         path: |
             *.snap
