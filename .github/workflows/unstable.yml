@@ -1,6 +1,7 @@
 name: Unstable
 
 on:
+    # TBD when this workflow should run
     push:
     pull_request:
     workflow_dispatch:
@@ -10,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    #Next line is in comment for testing with forked repository
     #if: github.repository == 'redis/redis-snap'
     strategy: 
         matrix:
@@ -67,6 +69,6 @@ jobs:
       # Can be removed when pushing to the real repository
       uses: actions/upload-artifact@v4
       with:
-#        name: redis-snap
+        name: redis-snap-${{ matrix.target-arch }}"
         path: |
             *.snap

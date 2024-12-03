@@ -66,6 +66,7 @@ parts:
   redis:
     plugin: make
     source: https://github.com/redis/redis.git
+#    Switch to source: redis when not running from fork for testing
 #    source: redis
     source-branch: 8.0-m01
     build-environment:
@@ -164,8 +165,3 @@ parts:
         - libssl-dev:amd64
         - jq
 
-          #  redisearch:
-          #    plugin: nil
-          #    source: .
-          #    stage-packages:
-          #      - libuv1
