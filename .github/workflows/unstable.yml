@@ -73,11 +73,12 @@ jobs:
             *.snap
 
   test:
-      runs-on: ubuntu-22.04
       needs: build
-      strategy:
-          matrix:
-              target-arch: [ amd64, arm64 ]
+      runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu24-arm64-4-16' || 'ubuntu-latest' }}
+#      runs-on: ubuntu-22.04
+#      strategy:
+#          matrix:
+#              target-arch: [ amd64, arm64 ]
       steps:
           -   name: Download artifact
               uses: actions/download-artifact@v4
@@ -92,4 +93,4 @@ jobs:
           -   name: Verify snap installation
               run: |
                   snap list | grep redis
-                  snap services | grep redis-server || echo "Redis service not found."
+                  snap services | grep redis || echo "Redis service not found."
