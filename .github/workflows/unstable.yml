@@ -72,10 +72,10 @@ jobs:
         path: |
             *.snap
 
-  test:
+  test: 
+      # This step is for basic testing of the snap package and is a placeholder for more comprehensive testing (e.g. using smoke tests)
       needs: build
-#      runs-on: ubuntu-22.04
-      runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu24-arm64-4-16' || 'ubuntu-latest' }}
+      runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu24-arm64-4-16' || 'ubuntu-latest' }} # Not sure what version of Ubuntu should be used for testing
       strategy:
           matrix:
               target-arch: [ amd64, arm64 ]
@@ -94,3 +94,6 @@ jobs:
               run: |
                   snap list | grep redis
                   snap services | grep redis || echo "Redis service not found."
+          -   name: Check Redis snap status
+              run: |
+                   snap info redis
