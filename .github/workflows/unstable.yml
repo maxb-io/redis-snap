@@ -59,6 +59,7 @@ jobs:
             path: ~/.local/state/snapcraft/log 
             
     - name: Upload
+      id: Upload
       run: |
           echo "placeholder for snap package upload"
           # for f in *.snap; do snapcraft upload --release=edge $f; done
