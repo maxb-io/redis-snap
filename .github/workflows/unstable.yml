@@ -1,7 +1,7 @@
 name: Unstable
 
 on:
-    push:
+    # TBD when this workflow should run
     pull_request:
     workflow_dispatch:
     #schedule:
@@ -10,10 +10,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    #Next line is in comment for testing with forked repository
     #if: github.repository == 'redis/redis-snap'
+    strategy: 
+        matrix:
+            target-arch: [amd64, arm64]
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
         repository: redis/redis
         path: redis
@@ -28,19 +32,68 @@ jobs:
     - name: Setup Snapcraft
       run: |
         sudo snap install snapcraft --classic
-    - name: Build amd64
+    - name: Build Snap
       env:
         SNAPCRAFT_BUILD_ENVIRONMENT: host
         SNAPCRAFT_BUILD_INFO: 1
-      run: snapcraft --target-arch amd64 --destructive-mode --enable-experimental-target-arch
-    - name: Build arm64
-      env:
-        SNAPCRAFT_BUILD_ENVIRONMENT: host
-        SNAPCRAFT_BUILD_INFO: 1
-      run: snapcraft --target-arch arm64 --destructive-mode --enable-experimental-target-arch
+      run: |
+          echo "the architecture is ${{ matrix.target-arch }}"
+          sudo snapcraft --verbose --target-arch ${{ matrix.target-arch }} --destructive-mode --enable-experimental-target-arch
+#      continue-on-error: true #Consider removing this line after finishing testing
+          
+    -   name: Archive Snapcraft logs on failure
+        # Can be removed when pushing to the real repository
+        if: failure() # This step runs only if a previous step fails
+        run: |
+            LOG_DIR="${HOME}/.local/state/snapcraft"
+            echo "Searching for logs in $LOG_DIR..."
+            ls -R $LOG_DIR || echo "No logs found."
+        continue-on-error: true # Ensure this step does not block execution
+
+    -   name: Upload Snapcraft logs as artifact
+        # Can be removed when pushing to the real repository
+        if: failure() # Runs only on failure
+        uses: actions/upload-artifact@v4
+        with:
+            name: snapcraft-logs
+            path: ~/.local/state/snapcraft/log 
+            
     - name: Upload
       run: |
           echo "placeholder for snap package upload"
           # for f in *.snap; do snapcraft upload --release=edge $f; done
       env:
         SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAP_TOKEN}}
+    - name: upload to artifacts
+      # Can be removed when pushing to the real repository
+      uses: actions/upload-artifact@v4
+      with:
+        name: redis-snap-${{ matrix.target-arch }}
+        path: |
+            *.snap
+
+  test: 
+      # This step is for basic testing of the snap package and is a placeholder for more comprehensive testing (e.g. using smoke tests)
+      needs: build
+      runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu24-arm64-4-16' || 'ubuntu-latest' }} # Not sure what version of Ubuntu should be used for testing
+      strategy:
+          matrix:
+              target-arch: [ amd64, arm64 ]
+      steps:
+          -   name: Download artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: redis-snap-${{ matrix.target-arch }}
+                  path: ./snap-artifacts
+          -   name: Install the snap package
+              run: |
+                  SNAP_FILE=$(ls snap-artifacts/*.snap)
+                  echo "Installing snap: $SNAP_FILE"
+                  sudo snap install --dangerous $SNAP_FILE
+          -   name: Verify snap installation
+              run: |
+                  snap list | grep redis
+                  snap services | grep redis || echo "Redis service not found."
+          -   name: Check Redis snap status
+              run: |
+                   snap info redis
