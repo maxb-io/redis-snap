@@ -74,11 +74,11 @@ jobs:
 
   test:
       needs: build
-      runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu24-arm64-4-16' || 'ubuntu-latest' }}
 #      runs-on: ubuntu-22.04
-#      strategy:
-#          matrix:
-#              target-arch: [ amd64, arm64 ]
+      runs-on: ${{ matrix.arch == 'arm64' && 'ubuntu24-arm64-4-16' || 'ubuntu-latest' }}
+      strategy:
+          matrix:
+              target-arch: [ amd64, arm64 ]
       steps:
           -   name: Download artifact
               uses: actions/download-artifact@v4
