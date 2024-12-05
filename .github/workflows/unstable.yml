@@ -71,3 +71,24 @@ jobs:
         name: redis-snap-${{ matrix.target-arch }}
         path: |
             *.snap
+
+  test:
+      runs-on: ubuntu-22.04
+      strategy:
+          matrix:
+              target-arch: [ amd64, arm64 ]
+      steps:
+          -   name: Download artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: redis-snap-${{ matrix.target-arch }}
+                  path: ./snap-artifacts
+          -   name: Install the snap package
+              run: |
+                  SNAP_FILE=$(ls snap-artifacts/*.snap)
+                  echo "Installing snap: $SNAP_FILE"
+                  sudo snap install --dangerous $SNAP_FILE
+          -   name: Verify snap installation
+              run: |
+                  snap list | grep redis
+                  snap services | grep redis-server || echo "Redis service not found."
